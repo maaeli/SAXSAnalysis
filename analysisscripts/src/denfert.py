@@ -33,7 +33,7 @@ from shutil import copyfile
 
 program_name = '/users/brennich/softwaretest/Denfert/Denfert_linux64'
 config_name = 'denfertconfig.txt'
-inputfile= 'merege_v1_invA_v1.out'
+inputfile= 'frame842_856_v3_invA.out'
 numberofruns = 10
 
 def strEmptyDefault(valueString):
