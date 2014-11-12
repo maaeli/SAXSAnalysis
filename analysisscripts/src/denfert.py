@@ -47,9 +47,8 @@ def generateConfigText(inputfile, prefix="denfert", runNumber=1, mode="A", q_max
                        layerContrast = '', knotNumber = '', radius = '', annealingT = '',
                        annealingSchedule = '', penalty = '', trialsperbead = ''):
     text = ""
-    if not (solventDensity == '' and layerContrast == '' and knotNumber == '' and \
-              radius == '' and  annealingT == '' and annealingSchedule == '' and  penalty == '' and
-              trialsperbead == ''):
+    if any(x != '' for x  in (solventDensity, layerContrast,knotNumber, radius, annealingT, 
+                                  annealingSchedule, penalty, trialsperbead)):
         mode = 'A'
     mode = mode.upper()
     if mode not in ('A', 'S', 'F'): 
