@@ -17,7 +17,8 @@ __status__ = "development"
 
 import os.path as op
 import os 
-
+import argparse
+import glob
 
 
 filenameIn = '/users/brennich/barbaramaria/GrpE45/20140925_13mg/dammif/gnomv3p2/frame842_856_v3.out'
@@ -68,7 +69,47 @@ def convert(filenameIn, filenameOut):
                     outline = line   
                 lastline = line
                 AngFile.write(outline)   
-                     
+                    
                      
 if __name__ == '__main__':
-    convert(filenameIn, filenameOut)                     
+    parser = argparse.ArgumentParser(description='Convert GNOM .out file from nm to Angstrom')
+    parser.add_argument('inputFilename', metavar='inputFilename',nargs='?',
+                        help = 'Name of the file to convert. If not specified, all .out files not containing invA will be converted')
+    parser.add_argument('-o', metavar='outputFilename', dest = 'outputFilename',default='',
+                        help = 'Name of the converted output file.')
+    args = parser.parse_args()
+    print args
+    inputFilename = args.inputFilename
+    outputFilename = args.outputFilename
+    
+    if inputFilename:
+        if op.exists(inputFilename):
+            print 'File {} exists.'.format(inputFilename)
+            if outputFilename == '':
+                outputFilename = ''.join(inputFilename.split('.')[:-1])+'_invA.out'
+                print outputFilename
+            if op.exists(outputFilename):
+                print 'File {} exists. No files processed'.format(outputFilename)
+            else:
+                try: 
+                    convert(inputFilename, outputFilename)  
+                except IOError:
+                    print 'IOError doing the coversion from {} to {}'.format(inputFilename,outputFilename)
+                else: 
+                    'Converted. Data written to {}'.format(outputFilename)  
+        else:
+            print 'File {} not found.'.format(args.inputFilename)
+    else: 
+        files = [fn for fn in glob.glob('*.out') if not 'invA' in fn]
+        print 'No file specified. Found {}.'.format(files)
+        for inputF in files:            
+            outputFilename = ''.join(inputF.split('.')[:-1])+'_invA.out'
+            if op.exists(outputFilename):
+                print 'File {} exists. {} not processed'.format(outputFilename, inputF)
+            else:
+                try: 
+                    convert(inputF, outputFilename)  
+                except IOError:
+                    print 'IOError doing the coversion from {} to {}'.format(inputF,outputFilename)
+                else: 
+                    'Converted {}. Data written to {}'.format(inputF,outputFilename)                         
