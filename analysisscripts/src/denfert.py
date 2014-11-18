@@ -30,10 +30,10 @@ import os
 import os.path as op
 from datetime import datetime
 from shutil import copyfile 
+import argparse
 
 program_name = '/users/brennich/softwaretest/Denfert/Denfert_linux64'
 config_name = 'denfertconfig.txt'
-inputfile= 'frame842_856_v3_invA.out'
 numberofruns = 10
 
 def strEmptyDefault(valueString):
@@ -71,6 +71,16 @@ def generateConfigText(inputfile, prefix="denfert", runNumber=1, mode="A", q_max
     return text
     
 if __name__ == '__main__':
+    
+    parser = argparse.ArgumentParser(description='Calculate DENFERT Models')
+    parser.add_argument('inputFilename', metavar='inputFilename',nargs='?',
+                        help = 'NName of .out file')
+    parser.add_argument('-o', metavar='outputFilename', dest = 'outputFilename',default='',
+                        help = 'Prefix for models')
+    args = parser.parse_args()
+    print args
+    inputfile = args.inputFilename
+    outputFilename = args.outputFilename
     
     date = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')).translate(None, ' -:')
     directory = "denfert" + date

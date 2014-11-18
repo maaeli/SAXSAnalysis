@@ -21,8 +21,7 @@ import argparse
 import glob
 
 
-filenameIn = '/users/brennich/barbaramaria/GrpE45/20140925_13mg/dammif/gnomv3p2/frame842_856_v3.out'
-filenameOut = filenameIn.split('.')[0] + '_invA.out'
+
 
 def convert(filenameIn, filenameOut):
     with open(filenameIn,'rb') as nmFile:
@@ -94,7 +93,7 @@ if __name__ == '__main__':
                 try: 
                     convert(inputFilename, outputFilename)  
                 except IOError:
-                    print 'IOError doing the coversion from {} to {}'.format(inputFilename,outputFilename)
+                    print 'IOError doing the conversion from {} to {}'.format(inputFilename,outputFilename)
                 else: 
                     'Converted. Data written to {}'.format(outputFilename)  
         else:
@@ -110,6 +109,6 @@ if __name__ == '__main__':
                 try: 
                     convert(inputF, outputFilename)  
                 except IOError:
-                    print 'IOError doing the coversion from {} to {}'.format(inputF,outputFilename)
+                    print 'IOError doing the conversion from {} to {}'.format(inputF,outputFilename)
                 else: 
                     'Converted {}. Data written to {}'.format(inputF,outputFilename)                         
