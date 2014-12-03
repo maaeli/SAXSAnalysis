@@ -64,38 +64,25 @@ def linkageToCluster(linkage, maxnsd = 1.0):
             #clustered += rightNodes
                   
     print clusters  
-    print clustered      
-
-if __name__ == '__main__':
-    
-    parser = argparse.ArgumentParser(description='Calculate DENFERT Models')
-    parser.add_argument('datapath', metavar='datapath',nargs='?',
-                        help = 'NName of .out file')
-  
-    args = parser.parse_args()
-    print args
-    datapath =  op.abspath(args.datapath)
-    print datapath
-    os.chdir(datapath)
-    print os.getcwd()
-    models = glob.glob('*-1.pdb')
-    modelnames = [model.split('/')[-1] for model in models]
-    print modelnames
+    print clustered 
+    return clusters     
     
    
+def parseInput(): 
+    parser = argparse.ArgumentParser(description='Perform hierarchical cluster analysis on NSD  matrix of models')
+    parser.add_argument('datapath', metavar='datapath',nargs='?',
+                        help = 'Name of the folder containing the models')
+    inputarg = parser.parse_args()
+    return inputarg
 
-    nsd = None
-    
-    
-    
+def getNSD(models):
+    nsd = None    
     if op.exists(nsdfile): 
         nsd = np.load(nsdfile)
         if nsd.shape[0] != len(models):
-            nsd = None
-    
+            nsd = None    
     if nsd is None:
-        nsd = np.zeros((len(models),len(models)))
-        
+        nsd = np.zeros((len(models),len(models)))        
         for i in range(len(models)):
             model1 = models[i]
             for j in range(i):
@@ -111,21 +98,35 @@ if __name__ == '__main__':
                                 print mnsd
                                 break
                 nsd[i,j] = nsd [j,i] = mnsd
-                np.save(nsdfile,nsd)
+                np.save(nsdfile,nsd)                 
+    assert (nsd.transpose()==nsd).all() 
+    return nsd   
+        
+
+if __name__ == '__main__':
     
-    #print nsd               
+    args = parseInput()
+    datapath  = op.abspath(args.datapath)
+    os.chdir(datapath)
+ 
+    models = glob.glob('*-1.pdb')
+    modelnames = [model.split('/')[-1] for model in models]
+    print modelnames
     
-    assert (nsd.transpose()==nsd).all()
+    nsd = getNSD(models) 
      
-     
-#linkage =  sch.ward(nsd)
     linkage =  sch.linkage(nsd,method='ward')
     print linkage
     #print modelnames
     
-    linkageToCluster(linkage, maxnsd = 1.5)
+    clusters = linkageToCluster(linkage, maxnsd = 1.5)
     
-    
+    for clust in clusters:
+        clustname = ''
+        for cl in clust:
+            clustname += modelnames[int(cl)] + ', '
+        print clustname
+        
      
     plt.subplot(1, 2, 1)
     ddata = sch.dendrogram(linkage, labels=modelnames, orientation='left')
