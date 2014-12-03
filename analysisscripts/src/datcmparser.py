@@ -24,9 +24,10 @@ def makeArrayPlot(array, filename=None, close=True,discrete = True, alphaGreen =
     ax1 = fig.add_subplot(1, 2, 1)
     if discrete:
         np.where(array>=alphaGreen,array, 1)
-        array[np.where(((alphaGreen>array) & (alphaRed<array)) == True)] = 0.25
+        array[np.where(((alphaGreen>array) & (alphaRed<array)) == True)] = 0.55 #0.25 for    0.5 for RYG
         np.where(alphaRed>=array,array,0.0)
-    ax1.imshow(array, interpolation="nearest", origin="upper",cmap='brg')
+    #ax1.imshow(array, interpolation="nearest", origin="upper",cmap='RdYlGn')
+    ax1.imshow(array, interpolation="nearest", origin="upper",cmap='spectral_r', vmin=-0.5, vmax=3)
     ax1.set_title(u"datcmp correlation table")
     ax1.set_xticks(range(array.shape[0]))
     ax1.set_xticklabels([str(i) for i in range(1, 1 + array.shape[0] )])
